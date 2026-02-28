@@ -1,8 +1,28 @@
 # Twitter/X Apify Actors Skill for OpenClaw (Followers + Optional Email Enrichment)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Repo stars](https://img.shields.io/github/stars/hundevmode/twitter-x-apify-actors-openclaw-skill?style=social)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/hundevmode/twitter-x-apify-actors-openclaw-skill)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/commits/main)
+
 A production-focused OpenClaw skill to run **Twitter/X lead collection** with Apify actors: collect followers/following and optionally enrich with emails.
 
 This skill is built for teams that need repeatable **Twitter lead generation automation** without manually wiring actor payloads each time.
+
+## Table of Contents
+
+- [Actor Links](#actor-links)
+- [What This Skill Does](#what-this-skill-does)
+- [Who This Skill Is For](#who-this-skill-is-for)
+- [Repository Structure](#repository-structure)
+- [Requirements](#requirements)
+- [Authentication (Apify)](#authentication-apify)
+- [Quick Start](#quick-start)
+- [Output Format](#output-format)
+- [Install as OpenClaw Skill](#install-as-openclaw-skill)
+- [ClawHub Publishing Notes](#clawhub-publishing-notes)
+- [SEO Keywords](#seo-keywords)
+- [License](#license)
 
 ## Actor Links
 
@@ -17,24 +37,22 @@ This skill is built for teams that need repeatable **Twitter lead generation aut
 - Optionally runs email actor and merges email/name data
 - Returns JSON with metrics and outreach-ready rows
 
-## Why Use This Skill
+## Who This Skill Is For
 
-If you are searching for workflows like:
-
-- Twitter followers scraper automation
-- X lead generation with Apify
-- Twitter email enrichment pipeline
-- OpenClaw skill for Apify actors
-
-this skill gives you a clean, reusable pattern for those exact tasks.
+- Growth teams building X audience lead lists
+- Founders running outbound campaigns from Twitter/X
+- Agencies that need repeatable social graph collection
+- Operators who want Apify actor automation without custom glue code
 
 ## Repository Structure
 
-- `SKILL.md` - trigger rules, workflow, execution guidance
-- `agents/openai.yaml` - OpenClaw UI metadata
-- `scripts/apify_twitter_actors.py` - actor runner CLI
-- `references/actor-contracts.md` - payload and output contracts
-- `references/troubleshooting.md` - common failures and fixes
+| Path | Purpose |
+|---|---|
+| `SKILL.md` | Trigger rules, workflow, execution guidance |
+| `agents/openai.yaml` | OpenClaw UI metadata |
+| `scripts/apify_twitter_actors.py` | CLI runner for followers + optional email enrichment |
+| `references/actor-contracts.md` | Actor input/output contracts |
+| `references/troubleshooting.md` | Common failures and fixes |
 
 ## Requirements
 
@@ -143,7 +161,7 @@ Before publishing to ClawHub:
 3. Run a smoke test with valid `APIFY_TOKEN`
 4. Keep actor IDs documented and configurable
 
-## SEO Tags
+## SEO Keywords
 
 Twitter scraper, X followers scraper, Apify actors, OpenClaw skill, email enrichment, Twitter lead generation, outbound automation, growth automation.
 
