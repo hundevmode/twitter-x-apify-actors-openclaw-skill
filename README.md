@@ -15,6 +15,8 @@ This skill is built for teams that need repeatable **Twitter lead generation aut
 - [What This Skill Does](#what-this-skill-does)
 - [Who This Skill Is For](#who-this-skill-is-for)
 - [Repository Structure](#repository-structure)
+- [Why This Beats Manual Scraping](#why-this-beats-manual-scraping)
+- [Use-Case Snippets](#use-case-snippets)
 - [Requirements](#requirements)
 - [Authentication (Apify)](#authentication-apify)
 - [Quick Start](#quick-start)
@@ -53,6 +55,30 @@ This skill is built for teams that need repeatable **Twitter lead generation aut
 | `scripts/apify_twitter_actors.py` | CLI runner for followers + optional email enrichment |
 | `references/actor-contracts.md` | Actor input/output contracts |
 | `references/troubleshooting.md` | Common failures and fixes |
+
+## Why This Beats Manual Scraping
+
+Manual Twitter/X prospecting usually fails at scale because extraction, filtering, enrichment, and formatting happen in separate steps. That creates inconsistency and slows outbound teams.
+
+This skill improves the process by keeping the pipeline deterministic:
+
+- one input target format (`x.com`, `twitter.com`, or `@handle`)
+- one runner for followers/following/both
+- one optional enrichment branch (email actor)
+- one normalized output contract for downstream systems
+
+For growth teams and agencies, this means faster campaign setup, fewer formatting errors, and better reuse across client niches.
+
+## Use-Case Snippets
+
+### 1) Founder outbound list from a competitor audience
+Collect followers of a target founder account, enrich with emails only when needed, and push final rows to your CRM staging sheet.
+
+### 2) Agency lead sprint for Twitter/X niches
+Run multiple profile targets with the same script contract, standardize output schema, and hand off to SDRs without manual cleanup.
+
+### 3) Low-cost discovery mode before enrichment
+Run follower-only collection first (`--include-emails` off), evaluate quality, then rerun top segments with enrichment enabled.
 
 ## Requirements
 
