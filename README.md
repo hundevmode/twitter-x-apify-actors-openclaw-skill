@@ -1,13 +1,13 @@
-# Twitter/X Apify Actors Skill for OpenClaw (Followers + Optional Email Enrichment)
+# Twitter/X Scraper Skill for OpenClaw (Apify Followers + Optional Email Enrichment)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 [![Repo stars](https://img.shields.io/github/stars/hundevmode/twitter-x-apify-actors-openclaw-skill?style=social)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/hundevmode/twitter-x-apify-actors-openclaw-skill)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/commits/main)
 
-A production-focused OpenClaw skill to run **Twitter/X lead collection** with Apify actors: collect followers/following and optionally enrich with emails.
+A production-focused OpenClaw **Twitter/X scraper skill** to run lead collection with Apify actors: collect followers/following and optionally enrich with emails.
 
-This skill is built for teams that need repeatable **Twitter lead generation automation** without manually wiring actor payloads each time.
+This skill is built for teams that need repeatable **Twitter scraper automation** and **Twitter lead generation** without manually wiring actor payloads each time.
 
 ## Table of Contents
 
@@ -189,7 +189,7 @@ Before publishing to ClawHub:
 
 ## SEO Keywords
 
-Twitter scraper, X followers scraper, Apify actors, OpenClaw skill, email enrichment, Twitter lead generation, outbound automation, growth automation.
+Twitter scraper, Twitter/X scraper, X followers scraper, social media scraper, Apify actors, OpenClaw skill, email enrichment, Twitter lead generation, outbound automation, growth automation.
 
 ## License
 
