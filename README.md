@@ -16,6 +16,7 @@ This skill is built for teams that need repeatable **Twitter scraper automation*
 - [Who This Skill Is For](#who-this-skill-is-for)
 - [Repository Structure](#repository-structure)
 - [Why This Beats Manual Scraping](#why-this-beats-manual-scraping)
+- [Twitter Scraper API Workflow](#twitter-scraper-api-workflow)
 - [Use-Case Snippets](#use-case-snippets)
 - [Requirements](#requirements)
 - [Authentication (Apify)](#authentication-apify)
@@ -68,6 +69,12 @@ This skill improves the process by keeping the pipeline deterministic:
 - one normalized output contract for downstream systems
 
 For growth teams and agencies, this means faster campaign setup, fewer formatting errors, and better reuse across client niches.
+
+## Twitter Scraper API Workflow
+
+Teams often look for a Twitter scraper API workflow that is simple to run and easy to maintain. This skill follows a clear execution pattern: parse profile target, run followers actor, optionally run email enrichment, and return normalized output. The flow is stable enough for repeated campaign usage while staying flexible through input flags like `collect-type`, `limit`, and `include-emails`.
+
+From an operations perspective, the value is not only in collection speed. The bigger win is predictable structure. Because the output schema stays consistent across runs, it is straightforward to pass results into n8n, Google Sheets, CSV exports, or CRM staging steps without rewriting transformation logic every time.
 
 ## Use-Case Snippets
 
