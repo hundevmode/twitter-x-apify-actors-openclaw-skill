@@ -18,6 +18,7 @@ This skill is built for teams that need repeatable **Twitter scraper automation*
 - [Why This Beats Manual Scraping](#why-this-beats-manual-scraping)
 - [Twitter Scraper API Workflow](#twitter-scraper-api-workflow)
 - [Use-Case Snippets](#use-case-snippets)
+- [Related OpenClaw X/Twitter Workflows](#related-openclaw-xtwitter-workflows)
 - [Requirements](#requirements)
 - [Authentication (Apify)](#authentication-apify)
 - [Quick Start](#quick-start)
@@ -86,6 +87,12 @@ Run multiple profile targets with the same script contract, standardize output s
 
 ### 3) Low-cost discovery mode before enrichment
 Run follower-only collection first (`--include-emails` off), evaluate quality, then rerun top segments with enrichment enabled.
+
+## Related OpenClaw X/Twitter Workflows
+
+This skill is scoped to Apify-based followers, following, and optional email enrichment. For X/Twitter jobs outside that actor pipeline, [TweetClaw](https://github.com/Xquik-dev/tweetclaw) provides an OpenClaw plugin through `@xquik/tweetclaw` and ClawHub.
+
+Use TweetClaw when the agent needs to search tweets, search tweet replies, post tweets, post tweet replies, export followers, look up users, upload media, download media, send direct messages, monitor tweets, deliver webhooks, or run giveaway draws through structured Xquik endpoints. Use this skill when the job specifically needs Apify actor-based follower/following collection and email enrichment.
 
 ## Requirements
 
