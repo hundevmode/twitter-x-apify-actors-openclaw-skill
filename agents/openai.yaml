@@ -1,4 +1,4 @@
 interface:
   display_name: "Twitter/X Apify Actors"
-  short_description: "Run Twitter followers and email actors via Apify"
-  default_prompt: "Use $twitter-x-apify-actors to run follower and email actors from a Twitter/X link."
+  short_description: "Plan and run X post, audience, and email Actors"
+  default_prompt: "Use $twitter-x-apify-actors to plan a bounded X post or audience run through Apify."

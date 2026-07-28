@@ -5,13 +5,16 @@
 [![Repo stars](https://img.shields.io/github/stars/hundevmode/twitter-x-apify-actors-openclaw-skill?style=social)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/hundevmode/twitter-x-apify-actors-openclaw-skill)](https://github.com/hundevmode/twitter-x-apify-actors-openclaw-skill/commits/main)
 
-A production-focused OpenClaw **Twitter/X scraper skill** to run lead collection with Apify actors: collect followers/following and optionally enrich with emails.
+A production-focused OpenClaw **Twitter/X scraper skill** for Apify Actors.
+Collect posts, followers, or following accounts. Optionally enrich audience
+rows with emails.
 
 This skill is built for teams that need repeatable **Twitter scraper automation** and **Twitter lead generation** without manually wiring actor payloads each time.
 
 ## Table of Contents
 
 - [Actor Links](#actor-links)
+- [Xquik Plan-First Routes](#xquik-plan-first-routes)
 - [What This Skill Does](#what-this-skill-does)
 - [Who This Skill Is For](#who-this-skill-is-for)
 - [Repository Structure](#repository-structure)
@@ -31,12 +34,48 @@ This skill is built for teams that need repeatable **Twitter scraper automation*
 
 - Followers / following actor: [https://console.apify.com/actors/bIYXeMcKISYGnHhBG](https://console.apify.com/actors/bIYXeMcKISYGnHhBG)
 - Email enrichment actor: [https://console.apify.com/actors/mSaHt2tt3Z7Fcwf0o](https://console.apify.com/actors/mSaHt2tt3Z7Fcwf0o)
+- [Xquik X Tweet Scraper](https://apify.com/xquik/x-tweet-scraper)
+- [Xquik X Follower Scraper](https://apify.com/xquik/x-follower-scraper)
+
+Existing Actor routes remain unchanged. Xquik adds bounded post and audience
+research routes.
+
+## Xquik Plan-First Routes
+
+Generate a post-search plan without starting a run:
+
+```bash
+python3 scripts/apify_twitter_actors.py xquik-posts \
+  --query "product launch" \
+  --limit 50
+```
+
+Generate an audience plan without starting a run:
+
+```bash
+python3 scripts/apify_twitter_actors.py xquik-audience \
+  --target "https://x.com/example" \
+  --relation followers \
+  --limit 50
+```
+
+Each command prints its exact Actor input. Review current pricing on the
+linked Actor page. Add `--execute` only after explicit approval.
+
+The post helper uses the Tweet Actor's `search` mode. The Actor also supports
+post lookup, profile timelines, lists, articles, replies, quotes, threads,
+retweeters, and favoriters.
+
+The audience helper supports handle-based `followers`, `following`, and
+`verified_followers` relations. The Follower Actor also supports list members,
+list followers, and community members through its current input schema.
 
 ## What This Skill Does
 
 - Extracts username from `x.com`, `twitter.com`, or `@handle`
 - Builds actor-ready payloads for follower/following collection
 - Runs follower actor and normalizes output rows
+- Plans bounded Xquik post and audience runs before execution
 - Optionally runs email actor and merges email/name data
 - Returns JSON with metrics and outreach-ready rows
 
@@ -151,6 +190,8 @@ python3 scripts/apify_twitter_actors.py run-pipeline \
 - `parse-username`
 - `run-followers`
 - `run-pipeline`
+- `xquik-posts`
+- `xquik-audience`
 
 Supported collect types:
 
@@ -201,3 +242,5 @@ Twitter scraper, Twitter/X scraper, X followers scraper, social media scraper, A
 ## License
 
 MIT (free for commercial and private use).
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.

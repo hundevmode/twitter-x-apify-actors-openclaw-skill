@@ -19,6 +19,8 @@ except ModuleNotFoundError:
 
 FOLLOWER_ACTOR_DEFAULT = "bIYXeMcKISYGnHhBG"
 EMAIL_ACTOR_DEFAULT = "mSaHt2tt3Z7Fcwf0o"
+XQUIK_TWEET_ACTOR = "xquik~x-tweet-scraper"
+XQUIK_FOLLOWER_ACTOR = "xquik~x-follower-scraper"
 APIFY_BASE = "https://api.apify.com/v2/acts"
 
 
@@ -34,7 +36,7 @@ class Config:
 
 
 def utc_now_iso() -> str:
-    return dt.datetime.now(dt.UTC).isoformat()
+    return dt.datetime.now(dt.timezone.utc).isoformat()
 
 
 def parse_username(target: str) -> str:
@@ -63,8 +65,15 @@ def run_actor_sync(actor_id: str, token: str, payload: dict[str, Any], timeout_s
         raise SkillError("Missing dependency: requests. Install with `pip install requests`.")
 
     url = f"{APIFY_BASE}/{actor_id}/run-sync-get-dataset-items"
-    params = {"token": token, "format": "json", "clean": "true"}
-    resp = requests.post(url, params=params, json=payload, timeout=timeout_sec)
+    params = {"format": "json", "clean": "true"}
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = requests.post(
+        url,
+        params=params,
+        headers=headers,
+        json=payload,
+        timeout=timeout_sec,
+    )
 
     if resp.status_code >= 400:
         raise SkillError(f"Actor {actor_id} failed: HTTP {resp.status_code} - {resp.text[:500]}")
@@ -97,6 +106,87 @@ def build_follower_input(username: str, collect_type: str, limit: int) -> dict[s
         "getFollowers": get_followers,
         "getFollowing": get_following,
         "outputMode": "usernames",
+    }
+
+
+def require_positive_limit(limit: int) -> None:
+    if limit < 1:
+        raise SkillError("limit must be >= 1")
+
+
+def build_xquik_post_input(query: str, limit: int) -> dict[str, Any]:
+    clean_query = (query or "").strip()
+    if not clean_query:
+        raise SkillError("query must not be empty")
+    require_positive_limit(limit)
+
+    return {
+        "mode": "search",
+        "searchTerms": [clean_query],
+        "queryType": "Latest + Top",
+        "includeSearchTerms": True,
+        "outputVariant": "rich",
+        "fieldStyle": "camelCase",
+        "outputPreset": "nested",
+        "maxItems": limit,
+        "maxItemsPerTarget": limit,
+    }
+
+
+def build_xquik_audience_input(
+    username: str,
+    relation: str,
+    limit: int,
+) -> dict[str, Any]:
+    supported_relations = {
+        "followers",
+        "following",
+        "verified_followers",
+    }
+    clean_relation = relation.lower().strip()
+    if clean_relation not in supported_relations:
+        choices = ", ".join(sorted(supported_relations))
+        raise SkillError(f"relation must be one of: {choices}")
+    require_positive_limit(limit)
+
+    return {
+        "twitterHandles": [parse_username(username)],
+        "relation": clean_relation,
+        "outputMode": "compact",
+        "includeTargetMetadata": True,
+        "dedupeMode": "merge",
+        "maxItems": limit,
+        "maxItemsPerTarget": limit,
+    }
+
+
+def build_xquik_plan(actor_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "ok": True,
+        "execute": False,
+        "actorId": actor_id,
+        "input": payload,
+        "message": "Review live Actor pricing and this input. Add --execute only after approval.",
+    }
+
+
+def run_xquik(
+    actor_id: str,
+    payload: dict[str, Any],
+    explicit_token: str | None,
+    execute: bool,
+) -> dict[str, Any]:
+    if not execute:
+        return build_xquik_plan(actor_id, payload)
+
+    token = require_token(explicit_token)
+    rows = run_actor_sync(actor_id, token, payload)
+    return {
+        "ok": True,
+        "execute": True,
+        "actorId": actor_id,
+        "recordsCount": len(rows),
+        "rows": rows,
     }
 
 
@@ -236,6 +326,30 @@ def cmd_run_pipeline(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_xquik_posts(args: argparse.Namespace) -> int:
+    payload = build_xquik_post_input(args.query, args.limit)
+    result = run_xquik(
+        XQUIK_TWEET_ACTOR,
+        payload,
+        args.apify_token,
+        args.execute,
+    )
+    print(json.dumps(result, ensure_ascii=True, indent=2))
+    return 0
+
+
+def cmd_xquik_audience(args: argparse.Namespace) -> int:
+    payload = build_xquik_audience_input(args.target, args.relation, args.limit)
+    result = run_xquik(
+        XQUIK_FOLLOWER_ACTOR,
+        payload,
+        args.apify_token,
+        args.execute,
+    )
+    print(json.dumps(result, ensure_ascii=True, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run Twitter/X Apify actors for followers + optional emails.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -271,6 +385,43 @@ def build_parser() -> argparse.ArgumentParser:
     p_pipe.add_argument("--follower-actor-id", **common["follower-actor-id"])
     p_pipe.add_argument("--email-actor-id", **common["email-actor-id"])
     p_pipe.set_defaults(func=cmd_run_pipeline)
+
+    p_posts = sub.add_parser(
+        "xquik-posts",
+        help="Plan or run a bounded X post search with Xquik",
+    )
+    p_posts.add_argument("--apify-token", **common["apify-token"])
+    p_posts.add_argument("--query", required=True)
+    p_posts.add_argument("--limit", type=int, default=50)
+    p_posts.add_argument(
+        "--execute",
+        action="store_true",
+        help="Start the Actor after reviewing live pricing and the generated plan",
+    )
+    p_posts.set_defaults(func=cmd_xquik_posts)
+
+    p_audience = sub.add_parser(
+        "xquik-audience",
+        help="Plan or run bounded X audience collection with Xquik",
+    )
+    p_audience.add_argument("--apify-token", **common["apify-token"])
+    p_audience.add_argument("--target", **common["target"])
+    p_audience.add_argument(
+        "--relation",
+        default="followers",
+        choices=[
+            "followers",
+            "following",
+            "verified_followers",
+        ],
+    )
+    p_audience.add_argument("--limit", type=int, default=50)
+    p_audience.add_argument(
+        "--execute",
+        action="store_true",
+        help="Start the Actor after reviewing live pricing and the generated plan",
+    )
+    p_audience.set_defaults(func=cmd_xquik_audience)
 
     return parser
 
